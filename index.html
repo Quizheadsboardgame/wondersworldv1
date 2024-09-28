@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WONDERS OF THE WORLD</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif; /* Standard font */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: transparent; /* Fully transparent background */
+            color: black; /* Standard text color */
+            text-align: center;
+        }
+
+        #quiz-container {
+            background-color: transparent; /* Fully transparent container */
+            padding: 20px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        #logo {
+            width: 150px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .question {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .answer {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: white; /* Change the answer color to white */
+        }
+
+        #next-button {
+            background-color: white; /* Change background color to white */
+            color: black; /* Change text color to black for visibility */
+            border: 2px solid #ff9900; /* Optional: Add a border for better visibility */
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease-in-out;
+        }
+
+        #next-button:hover {
+            background-color: #ffcc00; /* Change hover color for better effect */
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .fadeOut {
+            animation: fadeOut 0.5s forwards;
+        }
+
+        .fadeIn {
+            animation: fadeIn 0.5s forwards;
+        }
+    </style>
+</head>
+<body>
+
+<div id="quiz-container">
+    <img id="logo" src="https://i.imgur.com/cyZ0Z21.png" alt="George Michael Logo">
+    <h1>WONDERS OF THE WORLD</h1>
+    <div id="question-container">
+        <div class="question" id="question">Loading question...</div>
+        <div class="answer" id="answer">Loading answer...</div>
+        <button id="next-button" onclick="nextQuestion()">Next Question</button>
+    </div>
+</div>
+
+<script>
+    // Question and answers data
+    const quizData = [
+        { question: "What was the first of the Seven Wonders of the Ancient World?", answer: "The Great Pyramid of Giza." },
+        { question: "Which wonder was built as a tomb for an Egyptian pharaoh?", answer: "The Great Pyramid of Giza." },
+        { question: "What is the only surviving wonder of the Ancient World?", answer: "The Great Pyramid of Giza." },
+        { question: "Where was the Hanging Gardens of Babylon located?", answer: "Babylon, in present-day Iraq." },
+        { question: "Which wonder was said to have been built by Nebuchadnezzar II for his wife?", answer: "The Hanging Gardens of Babylon." },
+        { question: "What material were the Colossus of Rhodes primarily made from?", answer: "Bronze." },
+        { question: "What city was home to the Statue of Zeus at Olympia?", answer: "Olympia, Greece." },
+        { question: "Which ancient wonder was a giant statue that stood at the entrance of a harbor?", answer: "The Colossus of Rhodes." },
+        { question: "How many of the original Seven Wonders still exist?", answer: "One." },
+        { question: "Which ancient wonder was built to honor the goddess Artemis?", answer: "The Temple of Artemis at Ephesus." },
+        { question: "What ancient wonder was destroyed by fire?", answer: "The Statue of Zeus at Olympia." },
+        { question: "Who is credited with compiling the list of the Seven Wonders of the Ancient World?", answer: "Ancient Greek scholars, notably Philo of Byzantium." },
+        { question: "What wonder was located in Alexandria, Egypt, and served as a lighthouse?", answer: "The Lighthouse of Alexandria (Pharos of Alexandria)." },
+        { question: "Which wonder was known for its intricate gardens and terraces?", answer: "The Hanging Gardens of Babylon." },
+        { question: "Which city was home to the Temple of Artemis?", answer: "Ephesus, Turkey." },
+        { question: "What was the height of the Colossus of Rhodes?", answer: "Approximately 33 meters (108 feet)." },
+        { question: "What ancient wonder was dedicated to the Greek god Apollo?", answer: "The Temple of Artemis at Ephesus." },
+        { question: "Which ancient wonder was said to be built on a hill and visible from the sea?", answer: "The Lighthouse of Alexandria." },
+        { question: "What was the primary purpose of the Great Pyramid of Giza?", answer: "To serve as a tomb for Pharaoh Khufu." },
+        { question: "Which ancient wonder was constructed around 2560 BC?", answer: "The Great Pyramid of Giza." },
+        { question: "What year was the New Seven Wonders of the World selected?", answer: "2007." },
+        { question: "Which structure is the largest religious monument in the world and located in Cambodia?", answer: "Angkor Wat." },
+        { question: "What is the famous city in Peru known for its Incan ruins and was once considered the 'Lost City'?", answer: "Machu Picchu." },
+        { question: "Which wonder is an ancient city carved into the rock, located in Jordan?", answer: "Petra." },
+        { question: "What is the name of the famous amphitheater located in Rome?", answer: "The Colosseum." },
+        { question: "Which wonder is a massive wall built to protect China from invasions?", answer: "The Great Wall of China." },
+        { question: "What is the name of the statue located in Rio de Janeiro, Brazil, that overlooks the city?", answer: "Christ the Redeemer." },
+        { question: "Which New Wonder is known for its intricate architecture and is located in India?", answer: "The Taj Mahal." },
+        { question: "What river flows near the Taj Mahal?", answer: "The Yamuna River." },
+        { question: "In which country is Machu Picchu located?", answer: "Peru." },
+        { question: "Which New Wonder was built as a mausoleum for Mughal Emperor Shah Jahan’s wife?", answer: "The Taj Mahal." },
+        { question: "What structure is considered a symbol of love and is a UNESCO World Heritage Site?", answer: "The Taj Mahal." },
+        { question: "What ancient Nabataean city is known for its rock-cut architecture?", answer: "Petra." },
+        { question: "Which wonder was completed in 80 AD and could hold up to 50,000 spectators?", answer: "The Colosseum." },
+        { question: "What structure stretches over 13,000 miles and was built over several centuries?", answer: "The Great Wall of China." },
+        { question: "Which New Wonder was built to honor the Roman gods and was a venue for gladiatorial contests?", answer: "The Colosseum." },
+        { question: "What type of architecture is Angkor Wat known for?", answer: "Khmer architecture." },
+        { question: "Which wonder is a UNESCO World Heritage Site and is often associated with the Silk Road?", answer: "The Great Wall of China." },
+        { question: "What mountain range is Machu Picchu located in?", answer: "The Andes." },
+        { question: "Which wonder is located in Brazil and stands 30 meters tall?", answer: "Christ the Redeemer." },
+        { question: "What city is known as the 'Rose City' due to its stone-carved buildings?", answer: "Petra." },
+        { question: "Which structure was built during the reign of Emperor Vespasian?", answer: "The Colosseum." },
+        { question: "In what year was the Taj Mahal completed?", answer: "1653." },
+        { question: "What architectural style is the Taj Mahal primarily designed in?", answer: "Mughal architecture." },
+        { question: "Which wonder features a giant seated statue of Jesus Christ?", answer: "Christ the Redeemer." },
+        { question: "What is the estimated time period during which the Great Wall of China was built?", answer: "7th century BC to the 16th century AD." },
+        { question: "Which wonder was built as a fort and later became a royal palace in Petra?", answer: "Al-Khazneh (The Treasury)." },
+        { question: "What is the main purpose of Angkor Wat?", answer: "It was originally built as a Hindu temple and later became a Buddhist temple." },
+        { question: "Which wonder features extensive use of red sandstone in its construction?", answer: "The Taj Mahal." },
+        { question: "What is the official language spoken in the region where Machu Picchu is located?", answer: "Spanish (though Quechua is also widely spoken)." },
+        { question: "What was the tallest man-made structure in the world when the Great Pyramid of Giza was built?", answer: "The Great Pyramid of Giza itself." },
+        { question: "Which ancient wonder was primarily known for its beautiful gardens?", answer: "The Hanging Gardens of Babylon." },
+        { question: "What material is the Statue of Christ the Redeemer made from?", answer: "Soapstone and reinforced concrete." },
+        { question: "In which country can you find the ancient city of Petra?", answer: "Jordan." },
+        { question: "What feature distinguishes the Great Wall of China from other wonders?", answer: "Its vast length and construction over centuries." },
+        { question: "What type of stone is the Taj Mahal primarily constructed from?", answer: "White marble." },
+        { question: "Which wonder is considered a symbol of ancient Greece?", answer: "The Statue of Zeus at Olympia." },
+        { question: "How long did it take to build the Great Pyramid of Giza?", answer: "Approximately 20 years." },
+        { question: "What wonder is also known as the Lighthouse of Pharos?", answer: "The Lighthouse of Alexandria." },
+        { question: "Which wonder is famous for its intricate carvings and water features?", answer: "Angkor Wat." },
+        { question: "What year was the Great Wall of China designated a UNESCO World Heritage Site?", answer: "1987." },
+        { question: "What ancient wonder was primarily destroyed by earthquakes?", answer: "The Colossus of Rhodes." },
+        { question: "What is the architectural style of the Great Pyramid of Giza?", answer: "Egyptian pyramidal architecture." },
+        { question: "Which wonder was built during the Maurya Empire in India?", answer: "The Taj Mahal (built during the Mughal Empire, which followed the Maurya Empire)." },
+        { question: "In which city is the Colosseum located?", answer: "Rome, Italy." },
+        { question: "What is the primary purpose of the Great Wall of China?", answer: "To protect against invasions." },
+        { question: "Which ancient wonder was known for its artistic and architectural excellence?", answer: "The Temple of Artemis at Ephesus." },
+        { question: "What structure has been a pilgrimage site for Christians and tourists alike?", answer: "Christ the Redeemer." },
+        { question: "What is the primary function of the Colosseum?", answer: "It was used for gladiatorial contests and public spectacles." },
+        { question: "Which New Wonder is renowned for its beautiful sunrise views?", answer: "Machu Picchu." },
+        { question: "What type of temple was Angkor Wat originally built as?", answer: "Hindu temple." },
+        { question: "Which ancient wonder was located on the island of Rhodes?", answer: "The Colossus of Rhodes." },
+        { question: "What unique feature does the Great Wall of China have along its length?", answer: "Watchtowers and fortresses." },
+        { question: "What year did UNESCO declare the Taj Mahal a World Heritage Site?", answer: "1983." },
+        { question: "What do the Hanging Gardens of Babylon represent?", answer: "Ancient engineering and botanical achievement." },
+        { question: "Which wonder is also known for its extensive network of waterworks and reservoirs?", answer: "Angkor Wat." },
+        { question: "What is the architectural significance of the Taj Mahal?", answer: "It represents the zenith of Mughal architecture." },
+        { question: "What form of artistry is the Colosseum known for?", answer: "Roman architectural design and engineering." },
+        { question: "What is the primary style of architecture seen in Petra?", answer: "Nabataean architecture." },
+        { question: "What famous river is located near Angkor Wat?", answer: "The Siem Reap River." },
+        { question: "Which wonder is known for the phrase 'The Eternal City'?", answer: "The Colosseum, representing Rome." },
+        { question: "Which wonder's design was influenced by Persian architecture?", answer: "The Taj Mahal." },
+        { question: "What material is primarily used in the construction of the Great Wall of China?", answer: "Stone, brick, tamped earth, and wood." },
+        { question: "What does the term 'wonder' refer to in the context of the Seven Wonders of the World?", answer: "Remarkable constructions that exemplify human creativity and engineering." },
+        { question: "Which wonder is associated with the phrase 'Seven Wonders of the World'?", answer: "Both the Seven Wonders of the Ancient World and the New Seven Wonders of the World." },
+        { question: "What role did the Hanging Gardens of Babylon play in ancient times?", answer: "They were considered a symbol of wealth and luxury." },
+        { question: "What are the main building materials used in the construction of the Colosseum?", answer: "Concrete and stone." },
+        { question: "Which wonder is located in a rainforest setting?", answer: "Machu Picchu." },
+        { question: "What was the primary purpose of the Lighthouse of Alexandria?", answer: "To guide sailors safely into the harbor." },
+        { question: "Which wonder is famous for its intricate inlaid designs and calligraphy?", answer: "The Taj Mahal." },
+        { question: "What is the most visited New Wonder?", answer: "The Great Wall of China." },
+        { question: "Which New Wonder is known for its fusion of cultures, combining elements from Hinduism and Buddhism?", answer: "Angkor Wat." },
+        { question: "What ancient wonder was famous for its colossal size and was one of the tallest statues of the ancient world?", answer: "The Colossus of Rhodes." },
+        { question: "Which wonder is considered an engineering marvel for its construction techniques?", answer: "The Great Pyramid of Giza." },
+        { question: "What significant event occurs every year at the Colosseum?", answer: "Historical reenactments and cultural events." },
+        { question: "In which language is the term 'Machu Picchu' derived?", answer: "Quechua." },
+        { question: "What is the significance of the location of Christ the Redeemer?", answer: "It symbolizes peace and has become an iconic landmark of Rio de Janeiro." },
+        { question: "Which wonder attracts thousands of tourists annually due to its breathtaking architecture and history?", answer: "The Taj Mahal." },
+        { question: "What is the major risk factor for the preservation of the Great Wall of China?", answer: "Erosion and urban development." },
+        { question: "Which wonder's construction is a testament to the engineering capabilities of the ancient world?", answer: "All the wonders listed, particularly the Great Pyramid of Giza and the Great Wall of China." }
+    ];
+
+    let currentQuestionIndex = 0;
+
+    // Shuffle the questions
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    // Start the quiz
+    shuffle(quizData);
+    showQuestion();
+
+    function showQuestion() {
+        const questionContainer = document.getElementById("question");
+        const answerContainer = document.getElementById("answer");
+
+        questionContainer.innerText = quizData[currentQuestionIndex].question;
+        answerContainer.innerText = "Loading answer...";
+
+        // Fade in effect
+        answerContainer.classList.remove("fadeIn");
+        answerContainer.classList.add("fadeOut");
+
+        setTimeout(() => {
+            answerContainer.innerText = quizData[currentQuestionIndex].answer;
+            answerContainer.classList.remove("fadeOut");
+            answerContainer.classList.add("fadeIn");
+        }, 500);
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < quizData.length) {
+            showQuestion();
+        } else {
+            const questionContainer = document.getElementById("question");
+            const answerContainer = document.getElementById("answer");
+            questionContainer.innerText = "Thank you for playing!";
+            answerContainer.innerText = "";
+            document.getElementById("next-button").style.display = "none"; // Hide the next button
+        }
+    }
+</script>
+
+</body>
+</html>
